@@ -25,8 +25,8 @@ build:
 
 requirements:
   build:
-    - {{ compiler('c') }}
-    - m2-autoconf  # [win]
+    - {{ compiler('c') }}     # [not win]
+    - m2-autoconf             # [win]
     - m2-automake{{ am_version }}  # [win]
     - m2-libtool  # [win]
     - m2w64-pkg-config  # [win]
