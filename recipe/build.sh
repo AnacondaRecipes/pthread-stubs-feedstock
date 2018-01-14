@@ -46,6 +46,7 @@ fi
 export PKG_CONFIG_LIBDIR=$uprefix/lib/pkgconfig:$uprefix/share/pkgconfig:${uprefix/h_env/build_env}/lib/pkgconfig:${uprefix/h_env/build_env}/share/pkgconfig
 configure_args=(
     --prefix=$uprefix
+    --build="${BUILD}"
     --disable-dependency-tracking
     --disable-selective-werror
     --disable-silent-rules
