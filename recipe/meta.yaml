@@ -1,8 +1,8 @@
 {% set xorg_name = "libpthread-stubs" %}
 {% set xorg_category = "xcb" %}
 {% set name = "pthread-stubs" %}
-{% set version = "0.3" %}
-{% set sha256 = "35b6d54e3cc6f3ba28061da81af64b9a92b7b757319098172488a660e3d87299" %}
+{% set version = "version_lookup_failed" %}
+{% set sha256 = "b3dcbad85de43e3500cc4ebd896885625f7fe6547d19fef0cbe0c54d397852e2" %}
 {% set am_version = "1.15" %} # keep synchronized with build.sh
 
 package:
