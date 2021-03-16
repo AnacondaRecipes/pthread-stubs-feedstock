@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # Only run this for linux-aarch64; otherwise it can't find the correct BUILD machine architecture.
-if [[ ${HOST} =~ aarch64* ]]; then
+if [[ `uname -m` == aarch64 ]]; then
   # Get an updated config.sub and config.guess
   cp $BUILD_PREFIX/share/libtool/build-aux/config.* .
 fi
