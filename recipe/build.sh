@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# Get an updated config.sub and config.guess
+cp -r ${BUILD_PREFIX}/share/libtool/build-aux/config.* .
+
 set -e
 IFS=$' \t\n' # workaround for conda 4.2.13+toolchain bug
 
