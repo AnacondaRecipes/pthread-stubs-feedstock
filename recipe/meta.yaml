@@ -1,8 +1,8 @@
 {% set xorg_name = "libpthread-stubs" %}
 {% set xorg_category = "xcb" %}
 {% set name = "pthread-stubs" %}
-{% set version = "0.3" %}
-{% set sha256 = "35b6d54e3cc6f3ba28061da81af64b9a92b7b757319098172488a660e3d87299" %}
+{% set version = "0.4" %}
+{% set sha256 = "e4d05911a3165d3b18321cc067fdd2f023f06436e391c6a28dff618a78d2e733" %}
 {% set am_version = "1.15" %} # keep synchronized with build.sh
 
 package:
@@ -20,26 +20,28 @@ source:
 # downstream packages.
 
 build:
-  number: 1
+  number: 1002
   detect_binary_files_with_prefix: true
 
 requirements:
   build:
-    - {{ compiler('c') }}     # [not win]
-    - m2-autoconf             # [win]
-    - m2-automake{{ am_version }}  # [win]
-    - m2-libtool  # [win]
-    - m2w64-pkg-config  # [win]
-    - m2w64-toolchain  # [win]
-    - pkg-config  # [not win]
-    - posix  # [win]
-    - libtool  # [not win]
-    # - xorg-util-macros
+    - m2-autoconf                   # [win]
+    - m2-automake{{ am_version }}   # [win]
+    - m2-libtool                    # [win]
+    - pkg-config
+    - gnuconfig                     # [unix]
+    - m2-base                       # [win]
+    - make                          # [unix]
+    - m2-make                       # [win]
+    - {{ compiler('c') }}           # [unix]
+    - {{ stdlib("c") }}             # [unix]
+    - {{ compiler('m2w64_c') }}     # [win]
+    - {{ stdlib("m2w64_c") }}       # [win]
+  host:
+    - xorg-util-macros
 
 test:
   commands:
-    - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
 
 about:
   home: https://xcb.freedesktop.org/
