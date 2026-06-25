@@ -7,13 +7,10 @@ mkdir "%LIBRARY_LIB%\pkgconfig"
 if errorlevel 1 exit 1
 
 (
-echo prefix=%LIBRARY_PREFIX:\=/%
-echo exec_prefix=${prefix}
-echo libdir=${exec_prefix}/lib
-echo.
 echo Name: pthread stubs
-echo Description: Stubs missing from libc for standard pthread functions
-echo Version: 0.4
+echo Description: Meta package for pthread symbols - defaults to heavyweight ones if the C runtime does not provide lightweight ones.
+echo Version: {{ version }}
+echo Cflags:
 echo Libs:
 ) > "%LIBRARY_LIB%\pkgconfig\pthread-stubs.pc"
 if errorlevel 1 exit 1

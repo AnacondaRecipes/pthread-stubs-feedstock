@@ -1,24 +1,22 @@
 {% set xorg_name = "libpthread-stubs" %}
-{% set xorg_category = "xcb" %}
+{% set xorg_category = "lib" %}
 {% set name = "pthread-stubs" %}
-{% set version = "0.4" %}
-{% set sha256 = "e4d05911a3165d3b18321cc067fdd2f023f06436e391c6a28dff618a78d2e733" %}
+{% set version = "0.5" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ xorg_name }}-{{ version }}.tar.bz2
-  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.bz2
-  sha256: {{ sha256 }}
+  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.xz
+  sha256: 59da566decceba7c2a7970a4a03b48d9905f1262ff94410a649224e33d2442bc
 
 # NOTE: This package does not build or install any binary code on Windows.
 # On Windows, bld.bat directly creates the pthread-stubs.pc pkg-config file
 # without requiring a compiler or autotools.
 
 build:
-  number: 1003
+  number: 0
   detect_binary_files_with_prefix: true
 
 requirements:
@@ -26,20 +24,33 @@ requirements:
     - pkg-config                     # [unix]
     - gnuconfig                      # [unix]
     - make                           # [unix]
+    - xorg-util-macros               # [unix]
     - {{ compiler('c') }}            # [unix]
     - {{ stdlib("c") }}              # [unix]
-  host:
-    - xorg-util-macros               # [unix]
 
 test:
   commands:
+    - test -f ${PREFIX}/lib/pkgconfig/pthread-stubs.pc  # [unix]
+    - if not exist %LIBRARY_LIB%\\pkgconfig\\pthread-stubs.pc exit 1  # [win]
 
 about:
   home: https://xcb.freedesktop.org/
+  dev_url: https://gitlab.freedesktop.org/xorg/lib/libpthread-stubs
+  doc_url: https://xcb.freedesktop.org/
   license: MIT
   license_family: MIT
   license_file: COPYING
-  summary: "Stubs missing from libc for standard pthread functions"
+  summary: pkg-config stubs for lightweight POSIX thread linkage used by XCB libraries.
+  description: |
+    libpthread-stubs ships the pthread-stubs.pc pkg-config file, which provides
+    the Cflags and Libs needed to link programs and libraries that use only the
+    lightweight pthread API. Libraries in the XCB family depend on it so they can
+    use pthreads optionally: they become thread-safe when linked against
+    libpthread, without a performance penalty in single-threaded use.
+
+    On platforms whose C runtime already provides the pthread symbols (for
+    example GNU/Linux with glibc or musl), the pkg-config flags are empty. On
+    other platforms, they expand to the appropriate full pthread linkage flags.
 
 extra:
   recipe-maintainers:
