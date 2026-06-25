@@ -20,20 +20,6 @@ else
     uprefix="$PREFIX"
 fi
 
-# On Windows we need to regenerate the configure scripts.
-if [ -n "$CYGWIN_PREFIX" ] ; then
-    am_version=1.15 # keep sync'ed with meta.yaml
-    export ACLOCAL=aclocal-$am_version
-    export AUTOMAKE=automake-$am_version
-    autoreconf_args=(
-        --force
-        --install
-        -I "$mprefix/share/aclocal"
-        -I "$BUILD_PREFIX_M/Library/usr/share/aclocal"
-    )
-    autoreconf "${autoreconf_args[@]}"
-fi
-
 export PKG_CONFIG_LIBDIR=$uprefix/lib/pkgconfig:$uprefix/share/pkgconfig
 configure_args=(
     --prefix=$mprefix
