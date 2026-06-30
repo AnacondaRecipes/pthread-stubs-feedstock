@@ -1,52 +1,55 @@
 {% set xorg_name = "libpthread-stubs" %}
-{% set xorg_category = "xcb" %}
+{% set xorg_category = "lib" %}
 {% set name = "pthread-stubs" %}
-{% set version = "0.3" %}
-{% set sha256 = "35b6d54e3cc6f3ba28061da81af64b9a92b7b757319098172488a660e3d87299" %}
-{% set am_version = "1.15" %} # keep synchronized with build.sh
+{% set version = "0.5" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ xorg_name }}-{{ version }}.tar.bz2
-  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.bz2
-  sha256: {{ sha256 }}
+  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.xz
+  sha256: 59da566decceba7c2a7970a4a03b48d9905f1262ff94410a649224e33d2442bc
 
-# NOTE: no Visual Studio dependent features, since this package does not build
-# or install any binary code on Windows. It needs m2w64-toolchain for the
-# configure script to run, but msys2 provides sufficient pthreads bits for
-# downstream packages.
+# NOTE: This package does not build or install any binary code on Windows.
+# On Windows, bld.bat directly creates the pthread-stubs.pc pkg-config file
+# without requiring a compiler or autotools.
 
 build:
-  number: 1
-  detect_binary_files_with_prefix: true
+  number: 0
 
 requirements:
   build:
-    - {{ compiler('c') }}     # [not win]
-    - m2-autoconf             # [win]
-    - m2-automake{{ am_version }}  # [win]
-    - m2-libtool  # [win]
-    - m2w64-pkg-config  # [win]
-    - m2w64-toolchain  # [win]
-    - pkg-config  # [not win]
-    - posix  # [win]
-    - libtool  # [not win]
-    # - xorg-util-macros
+    - pkg-config                     # [unix]
+    - gnuconfig                      # [unix]
+    - make                           # [unix]
+    - xorg-util-macros               # [unix]
+    - {{ compiler('c') }}            # [unix]
+    - {{ stdlib("c") }}              # [unix]
 
 test:
   commands:
-    - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
+    - test -f ${PREFIX}/lib/pkgconfig/pthread-stubs.pc  # [unix]
+    - if not exist %LIBRARY_LIB%\\pkgconfig\\pthread-stubs.pc exit 1  # [win]
 
 about:
   home: https://xcb.freedesktop.org/
+  dev_url: https://gitlab.freedesktop.org/xorg/lib/libpthread-stubs
+  doc_url: https://xcb.freedesktop.org/
   license: MIT
   license_family: MIT
   license_file: COPYING
-  summary: "Stubs missing from libc for standard pthread functions"
+  summary: pkg-config stubs for lightweight POSIX thread linkage used by XCB libraries.
+  description: |
+    libpthread-stubs ships the pthread-stubs.pc pkg-config file, which provides
+    the Cflags and Libs needed to link programs and libraries that use only the
+    lightweight pthread API. Libraries in the XCB family depend on it so they can
+    use pthreads optionally: they become thread-safe when linked against
+    libpthread, without a performance penalty in single-threaded use.
+
+    On platforms whose C runtime already provides the pthread symbols (for
+    example GNU/Linux with glibc or musl), the pkg-config flags are empty. On
+    other platforms, they expand to the appropriate full pthread linkage flags.
 
 extra:
   recipe-maintainers:
