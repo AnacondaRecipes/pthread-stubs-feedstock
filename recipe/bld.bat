@@ -9,7 +9,7 @@ if errorlevel 1 exit 1
 (
 echo Name: pthread stubs
 echo Description: Meta package for pthread symbols - defaults to heavyweight ones if the C runtime does not provide lightweight ones.
-echo Version: {{ version }}
+echo Version: %PKG_VERSION%
 echo Cflags:
 echo Libs:
 ) > "%LIBRARY_LIB%\pkgconfig\pthread-stubs.pc"
